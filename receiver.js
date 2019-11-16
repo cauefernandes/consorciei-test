@@ -18,14 +18,15 @@ exports.handler = async event => {
 
     const params = {
       TableName: "exam1",
-      Item: { 
+      Item: {
         id: generateUUID(),
          origin: attributes.origin.stringValue,
          type: attributes.type.stringValue,
          message: attributes.message.stringValue,
          params:[
          attributes.params.stringValue
-       ]
+       ],
+       timestamp: new Date().getTime()
       }
     };
     try {
