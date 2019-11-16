@@ -66,10 +66,14 @@ functions:
           path: v1/get_logs_by_origin
           method: get
           private: false
+  get_logs_by_type:
+    handler: get_logs_by_type.handler
+    events:
       - http:
-          path: v1/get_logs_by_origin
+          path: v1/get_logs_by_type
           method: get
           private: false
+
 
 
 # resources:
