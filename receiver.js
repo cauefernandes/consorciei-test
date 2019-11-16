@@ -23,6 +23,9 @@ exports.handler = async event => {
          origin: attributes.origin.stringValue,
          type: attributes.type.stringValue,
          message: attributes.message.stringValue,
+         params:[
+         attributes.params.stringValue
+       ]
       }
     };
     try {

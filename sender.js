@@ -28,6 +28,10 @@ exports.handler = function(event, context, callback) {
     "message": {
       DataType: "String",
       StringValue: myBody.message
+    },
+    "params": {
+      DataType: "String",
+      StringValue: JSON.stringify(myBody.params)
     }
   },
         // MessageBody: event.body,
