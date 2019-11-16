@@ -7,15 +7,19 @@ exports.handler = function(event, context, callback) {
     var queueUrl = 'https://sqs.us-east-1.amazonaws.com/918810475415/exam1';
 
     var myBody = JSON.parse(event.body);
-
-    // response and status of HTTP endpoint
     var responseBody = {
-        message: ''
     };
     var responseCode = 200;
+    var msgparams;
+    if(myBody.params!=undefined){
+      msgparams = JSON.stringify(myBody.params)
+    }
+    else{
+      msgparams = "null";
+    }
 
     // SQS message parameters
-    var params = {
+    var attributes = {
       MessageAttributes: {
     "origin": {
       DataType: "String",
@@ -31,7 +35,7 @@ exports.handler = function(event, context, callback) {
     },
     "params": {
       DataType: "String",
-      StringValue: JSON.stringify(myBody.params)
+      StringValue: msgparams
     }
   },
         // MessageBody: event.body,
@@ -40,14 +44,15 @@ exports.handler = function(event, context, callback) {
         DelaySeconds: 0
     };
 
-    sqs.sendMessage(params, function(err, data) {
+    sqs.sendMessage(attributes, function(err, data) {
         if (err) {
             console.log('error:', "failed to send message" + err);
             var responseCode = 500;
+            responseBody.status = false;
+            responseBody.error = err;
         } else {
             console.log('data:', data.MessageId);
-            responseBody.message = 'Sent to ' + queueUrl;
-            responseBody.messageId = data.MessageId;
+            responseBody.status = true;
         }
         var response = {
             statusCode: responseCode,

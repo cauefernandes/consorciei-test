@@ -17,8 +17,8 @@ exports.handler = async event => {
     console.log("text: ", attributes.origin.stringValue);
 
     const params = {
-      TableName: "exam1", // The name of your DynamoDB table
-      Item: { // Creating an Item with a unique id and with the passed title
+      TableName: "exam1",
+      Item: { 
         id: generateUUID(),
          origin: attributes.origin.stringValue,
          type: attributes.type.stringValue,
