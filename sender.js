@@ -4,7 +4,7 @@ var sqs = new AWS.SQS({
 });
 
 exports.handler = function(event, context, callback) {
-    var queueUrl = 'https://sqs.us-east-1.amazonaws.com/918810475415/exam2';
+    var queueUrl = 'https://sqs.us-east-1.amazonaws.com/918810475415/exam1';
 
     var myBody = JSON.parse(event.body);
 
@@ -55,4 +55,7 @@ exports.handler = function(event, context, callback) {
 
         callback(null, response);
     });
+
+
+
 }

@@ -12,13 +12,10 @@
 # Happy Coding!
 
 service: exam1
-# app and org for use with dashboard.serverless.com
 app: exam1-app
 org: fernandescauep
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
+
 
 provider:
   name: aws
@@ -27,17 +24,27 @@ provider:
   iamRoleStatements:
     - Effect: "Allow"
       Action:
-        - "sqs:SendMessage"
-        - "sqs:GetQueueUrl"
+        - sqs:SendMessage
+        - sqs:GetQueueUrl
         - sqs:ReceiveMessage
         - sqs:DeleteMessage
         - sqs:GetQueueAttributes
         - sqs:ChangeMessageVisibility
-      Resource: "arn:aws:sqs:us-east-1:918810475415:exam2"
+      Resource: "arn:aws:sqs:us-east-1:918810475415:exam1"
     - Effect: "Allow"
       Action:
         - "sqs:ListQueues"
       Resource: "arn:aws:sqs:us-east-1:918810475415:*"
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:918810475415:table/exam1"
 
 functions:
   sender:
@@ -53,9 +60,20 @@ functions:
           arn: "arn:aws:sqs:us-east-1:918810475415:exam2"
           batchSize: 1
 
-resources:
-  Resources:
-    MyQueue:
-      Type: "AWS::SQS::Queue"
-      Properties:
-        QueueName: "exam2"
+# resources:
+#   Resources:
+#     MyQueue:
+#       Type: "AWS::SQS::Queue"
+#       Properties:
+#         QueueName: "exam1"
+#     MyTable:
+#       Type: AWS::DynamoDB::Table
+#       Properties:
+#         TableName: exam1
+#         AttributeDefinitions:
+#           - AttributeName: Id
+#             AttributeType: S
+#         KeySchema:
+#           - AttributeName: Id
+#             KeyType: HASH
+#         BillingMode: PAY_PER_REQUEST
