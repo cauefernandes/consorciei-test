@@ -11,17 +11,18 @@ let messageCount = 0
 let funcId = 'id'+parseInt(Math.random()*1000)
 
 exports.handler = async event => {
-     var attributes = event["Records"][0].attributes;
-    //
-      console.log(attributes.origin)
+
+    var attributes = event.Records[0].messageAttributes;
+
+    console.log("text: ", attributes.origin.stringValue);
 
     const params = {
       TableName: "exam1", // The name of your DynamoDB table
       Item: { // Creating an Item with a unique id and with the passed title
         id: generateUUID(),
-        origin: attributes.origin,
-        type: attributes.type,
-        message: attributes.message,
+         origin: attributes.origin.stringValue,
+         type: attributes.type.stringValue,
+         message: attributes.message.stringValue,
       }
     };
     try {
