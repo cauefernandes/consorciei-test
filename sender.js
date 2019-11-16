@@ -18,6 +18,22 @@ exports.handler = function(event, context, callback) {
       msgparams = "null";
     }
 
+    if (myBody.type != "log" &&  myBody.type != "warn" && myBody.type != "error" && myBody.type != "custom")
+  {
+        var responseCode = 500;
+            responseBody.status = false;
+            responseBody.message = "Invalid log type - accepted type(log,warn,error,custom)";
+        var response = {
+            statusCode: responseCode,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+              body: JSON.stringify(responseBody)
+        };
+        callback(null, response);
+    }
+
+
     // SQS message parameters
     var attributes = {
       MessageAttributes: {
@@ -45,11 +61,12 @@ exports.handler = function(event, context, callback) {
     };
 
     sqs.sendMessage(attributes, function(err, data) {
+
         if (err) {
             console.log('error:', "failed to send message" + err);
             var responseCode = 500;
             responseBody.status = false;
-            responseBody.error = err;
+            responseBody.message = err;
         } else {
             console.log('data:', data.MessageId);
             responseBody.status = true;

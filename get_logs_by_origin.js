@@ -6,18 +6,21 @@ const documentClient = new AWS.DynamoDB.DocumentClient();
 exports.handler = async event => {
 
   if (!("queryStringParameters" in event) || !(event.queryStringParameters)) {
-      return {
-        statusCode: 404,
-        error: `No pathParameters`
-      };
+    const response = {
+    statusCode: 500,
+    body: JSON.stringify({ message: 'No pathParameters' })
+  };
+
+  return response;
     }
     if (!(event.queryStringParameters.origin)) {
-      return {
-        statusCode: 404,
-        error: `No origin in Query String: ${JSON.stringify(event.queryStringParameters)}`
+      const response = {
+      statusCode: 500,
+      body: JSON.stringify({ message: `No origin in Query String: ${JSON.stringify(event.queryStringParameters)}` })
       };
-    }
+    return response;
 
+    }
 
   const params = {
     TableName: "exam1",
@@ -37,7 +40,7 @@ const data = await documentClient.query(params).promise();
     } catch (e) {
       return {
         statusCode: 500,
-        body: JSON.stringify(e)
+        message: JSON.stringify(e)
       };
     }
 };

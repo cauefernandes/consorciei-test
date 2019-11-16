@@ -5,17 +5,24 @@ const documentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async event => {
 
+
+
+
   if (!("queryStringParameters" in event) || !(event.queryStringParameters)) {
-      return {
-        statusCode: 404,
-        error: `No pathParameters`
-      };
+    const response = {
+    statusCode: 500,
+    body: JSON.stringify({ message: 'No pathParameters' })
+  };
+
+  return response;
     }
     if (!(event.queryStringParameters.type)) {
-      return {
-        statusCode: 404,
-        error: `No origin in Query String: ${JSON.stringify(event.queryStringParameters)}`
+      const response = {
+      statusCode: 500,
+      body: JSON.stringify({ message: `No type in Query String: ${JSON.stringify(event.queryStringParameters)}` })
       };
+    return response;
+
     }
 
 
