@@ -34,12 +34,14 @@ exports.handler = async event => {
 const data = await documentClient.query(params).promise();
        const response = {
         statusCode: 200,
+        status: true,
         body: JSON.stringify(data.Items)
       };
       return response;
     } catch (e) {
       return {
         statusCode: 500,
+        status: false,
         message: JSON.stringify(e)
       };
     }

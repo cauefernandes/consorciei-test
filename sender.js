@@ -10,13 +10,7 @@ exports.handler = function(event, context, callback) {
     var responseBody = {
     };
     var responseCode = 200;
-    var msgparams;
-    if(myBody.params!=undefined){
-      msgparams = JSON.stringify(myBody.params)
-    }
-    else{
-      msgparams = "null";
-    }
+
 
     if (myBody.type != "log" &&  myBody.type != "warn" && myBody.type != "error" && myBody.type != "custom")
   {
@@ -48,10 +42,6 @@ exports.handler = function(event, context, callback) {
     "message": {
       DataType: "String",
       StringValue: myBody.message
-    },
-    "params": {
-      DataType: "String",
-      StringValue: msgparams
     }
   },
         // MessageBody: event.body,
@@ -59,6 +49,14 @@ exports.handler = function(event, context, callback) {
         QueueUrl: queueUrl,
         DelaySeconds: 0
     };
+
+    if(myBody.params){
+      attributes.MessageAttributes.params = {
+        DataType: "String",
+        StringValue: JSON.stringify(myBody.params)
+      }
+    }
+
 
     sqs.sendMessage(attributes, function(err, data) {
 

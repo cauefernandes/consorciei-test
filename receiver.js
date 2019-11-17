@@ -23,12 +23,16 @@ exports.handler = async event => {
          origin: attributes.origin.stringValue,
          type: attributes.type.stringValue,
          message: attributes.message.stringValue,
-         params:[
-         attributes.params.stringValue
-       ],
        timestamp: new Date().getTime()
       }
     };
+
+    if(attributes.params){
+      params.Item.params = [attributes.params.stringValue]
+
+      }
+
+
     try {
       // Utilising the put method to insert an item into the table (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html#GettingStarted.NodeJs.03.01)
       const data = await documentClient.put(params).promise();
