@@ -1,9 +1,10 @@
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
-
+// Add required AWS SDK
+const AWS = require('aws-sdk');
+// Initialising the DynamoDB SDK
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async event => {
-
+    // Check if query string parameters exist in the Event and return 500 if not
     if (!("queryStringParameters" in event) || !(event.queryStringParameters)) {
         const response = {
             statusCode: 500,
@@ -14,6 +15,7 @@ exports.handler = async event => {
         };
         return response;
     }
+    // Check if query string parameters has a Origin parameter and return 500 if not
     if (!(event.queryStringParameters.origin)) {
         const response = {
             statusCode: 500,
@@ -26,8 +28,11 @@ exports.handler = async event => {
 
     }
 
+    // Create parameters to be queried from DynamoDB based on query string parameters
     const params = {
+        // Define DynamoDB table name
         TableName: "exam1",
+        // Define the queried index name
         IndexName: "origin",
         KeyConditionExpression: "origin = :origin",
         ExpressionAttributeValues: {
@@ -35,8 +40,9 @@ exports.handler = async event => {
         }
     };
     try {
+        // Utilising the query method to get the items from DynamoDB based on the params const
         const data = await documentClient.query(params).promise();
-
+        // Return a 200 if the query has been successfull or 500 if it failed
         var responseBody = {};
         responseBody.status = true;
         responseBody.body = data.Items;

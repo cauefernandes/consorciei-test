@@ -1,4 +1,6 @@
+// Add required AWS SDK
 const AWS = require("aws-sdk");
+// Add required crypto
 const crypto = require("crypto");
 
 // Generate unique id with no external dependencies
@@ -6,17 +8,13 @@ const generateUUID = () => crypto.randomBytes(16).toString("hex");
 // Initialising the DynamoDB SDK
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
-let counter = 1
-let messageCount = 0
-let funcId = 'id' + parseInt(Math.random() * 1000)
-
 exports.handler = async event => {
-
+    // Get message attributes from SQS message
     var attributes = event.Records[0].messageAttributes;
 
-    console.log("text: ", attributes.origin.stringValue);
-
+    // Create parameters to be added to DynamoDB based on Message Attribute values
     const params = {
+        // Define DynamoDB table name
         TableName: "exam1",
         Item: {
             id: generateUUID(),
@@ -27,19 +25,20 @@ exports.handler = async event => {
         }
     };
 
+    // Check if params was added to the message and add it to the Items to be added to DynamoDB
     if (attributes.params) {
         params.Item.params = [attributes.params.stringValue]
 
     }
 
-
     try {
-        // Utilising the put method to insert an item into the table (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html#GettingStarted.NodeJs.03.01)
+        // Utilising the put method to insert an item into the table
         const data = await documentClient.put(params).promise();
+        // Return a 200 if the item has been inserted or 500 if it failed
         const response = {
             statusCode: 200
         };
-        return response; // Returning a 200 if the item has been inserted
+        return response;
     } catch (e) {
         return {
             statusCode: 500,
