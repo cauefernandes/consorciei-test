@@ -5,24 +5,21 @@ var sqs = new AWS.SQS({
 
 exports.handler = function(event, context, callback) {
     var queueUrl = 'https://sqs.us-east-1.amazonaws.com/918810475415/exam1';
-
     var myBody = JSON.parse(event.body);
-    var responseBody = {
-    };
+    var responseBody = {};
     var responseCode = 200;
 
 
-    if (myBody.type != "log" &&  myBody.type != "warn" && myBody.type != "error" && myBody.type != "custom")
-  {
-        var responseCode = 500;
-            responseBody.status = false;
-            responseBody.message = "Invalid log type - accepted type(log,warn,error,custom)";
+    if (myBody.type != "log" && myBody.type != "warn" && myBody.type != "error" && myBody.type != "custom") {
+        responseCode = 500;
+        responseBody.status = false;
+        responseBody.message = "Invalid log type - accepted type(log,warn,error,custom)";
         var response = {
             statusCode: responseCode,
             headers: {
                 'Content-Type': 'application/json'
             },
-              body: JSON.stringify(responseBody)
+            body: JSON.stringify(responseBody)
         };
         callback(null, response);
     }
@@ -30,31 +27,31 @@ exports.handler = function(event, context, callback) {
 
     // SQS message parameters
     var attributes = {
-      MessageAttributes: {
-    "origin": {
-      DataType: "String",
-      StringValue: myBody.origin
-    },
-    "type": {
-      DataType: "String",
-      StringValue: myBody.type
-    },
-    "message": {
-      DataType: "String",
-      StringValue: myBody.message
-    }
-  },
+        MessageAttributes: {
+            "origin": {
+                DataType: "String",
+                StringValue: myBody.origin
+            },
+            "type": {
+                DataType: "String",
+                StringValue: myBody.type
+            },
+            "message": {
+                DataType: "String",
+                StringValue: myBody.message
+            }
+        },
         // MessageBody: event.body,
         MessageBody: 'testing',
         QueueUrl: queueUrl,
         DelaySeconds: 0
     };
 
-    if(myBody.params){
-      attributes.MessageAttributes.params = {
-        DataType: "String",
-        StringValue: JSON.stringify(myBody.params)
-      }
+    if (myBody.params) {
+        attributes.MessageAttributes.params = {
+            DataType: "String",
+            StringValue: JSON.stringify(myBody.params)
+        }
     }
 
 

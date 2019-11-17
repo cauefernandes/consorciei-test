@@ -8,7 +8,7 @@ const documentClient = new AWS.DynamoDB.DocumentClient();
 
 let counter = 1
 let messageCount = 0
-let funcId = 'id'+parseInt(Math.random()*1000)
+let funcId = 'id' + parseInt(Math.random() * 1000)
 
 exports.handler = async event => {
 
@@ -17,33 +17,33 @@ exports.handler = async event => {
     console.log("text: ", attributes.origin.stringValue);
 
     const params = {
-      TableName: "exam1",
-      Item: {
-        id: generateUUID(),
-         origin: attributes.origin.stringValue,
-         type: attributes.type.stringValue,
-         message: attributes.message.stringValue,
-       timestamp: new Date().getTime()
-      }
+        TableName: "exam1",
+        Item: {
+            id: generateUUID(),
+            origin: attributes.origin.stringValue,
+            type: attributes.type.stringValue,
+            message: attributes.message.stringValue,
+            timestamp: new Date().getTime()
+        }
     };
 
-    if(attributes.params){
-      params.Item.params = [attributes.params.stringValue]
+    if (attributes.params) {
+        params.Item.params = [attributes.params.stringValue]
 
-      }
+    }
 
 
     try {
-      // Utilising the put method to insert an item into the table (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html#GettingStarted.NodeJs.03.01)
-      const data = await documentClient.put(params).promise();
-      const response = {
-        statusCode: 200
-      };
-      return response; // Returning a 200 if the item has been inserted
+        // Utilising the put method to insert an item into the table (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html#GettingStarted.NodeJs.03.01)
+        const data = await documentClient.put(params).promise();
+        const response = {
+            statusCode: 200
+        };
+        return response; // Returning a 200 if the item has been inserted
     } catch (e) {
-      return {
-        statusCode: 500,
-        body: JSON.parse(e)
-      };
+        return {
+            statusCode: 500,
+            body: JSON.parse(e)
+        };
     }
 };
